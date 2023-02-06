@@ -1,6 +1,6 @@
 import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()((theme) => ({
   appBar: {
     borderRadius: 15,
     margin: "30px 0",
@@ -14,6 +14,11 @@ const useStyles = makeStyles()(() => ({
   },
   image: {
     marginLeft: "15px",
+  },
+  mainContainer: {
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column-reverse",
+    },
   },
 }));
 
