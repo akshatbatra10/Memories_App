@@ -12,6 +12,22 @@ const Input = ({
   handleShowPassword,
   type,
 }) => {
+  const obj =
+    name === "password"
+      ? {
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton onClick={handleShowPassword}>
+                {type === "password" ? (
+                  <VisibilityIcon />
+                ) : (
+                  <VisibilityOffIcon />
+                )}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }
+      : {};
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
@@ -21,21 +37,24 @@ const Input = ({
         required
         fullWidth
         label={label}
+        type={type}
         autoFocus={autoFocus}
-        InputProps={
-          name === "password" && {
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton onClick={handleShowPassword}>
-                  {type === "password" ? (
-                    <VisibilityIcon />
-                  ) : (
-                    <VisibilityOffIcon />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }
+        inputProps={
+          name === "password"
+            ? {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={handleShowPassword}>
+                      {type === "password" ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            : {}
         }
       />
     </Grid>

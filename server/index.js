@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 
 import postRoutes from "./routes/posts.js";
+import userRoutes from "./routes/users.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(morgan("dev"));
 
 app.use("/posts", postRoutes);
+app.use("/users", userRoutes);
 
 const DATABASE_URL = process.env.DATABASE_URL;
 const PORT = process.env.PORT || 5000;

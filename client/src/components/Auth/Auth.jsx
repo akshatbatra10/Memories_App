@@ -7,19 +7,46 @@ import {
   Grid,
   Button,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
 
+import { signin, signup } from "../../actions/auth";
 import Input from "./Input";
 import useStyles from "./style";
 
 const Auth = () => {
   const { classes } = useStyles();
+
+  const initialState = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    if (isSignup) {
+      dispatch(signup(formData, navigate));
+    } else {
+      dispatch(signin(formData, navigate));
+    }
+    setFormData(initialState);
+  };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const switchMode = () => {
     setIsSignup((prevState) => !prevState);
@@ -86,6 +113,19 @@ const Auth = () => {
             className={classes.submit}>
             {isSignup ? "Sign Up" : "Sign In"}
           </Button>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              dispatch({
+                type: "AUTH",
+                payload: { data: credentialResponse.credential },
+              });
+              navigate("/");
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+            theme='filled_blue'
+          />
           <Grid container justifyContent='flex-end'>
             <Grid item>
               <Button onClick={switchMode} style={{ color: "black" }}>
