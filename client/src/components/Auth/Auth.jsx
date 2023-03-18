@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 import { signin, signup } from "../../actions/auth";
 import Input from "./Input";
@@ -35,7 +36,6 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     if (isSignup) {
       dispatch(signup(formData, navigate));
     } else {
@@ -117,7 +117,10 @@ const Auth = () => {
             onSuccess={async (credentialResponse) => {
               dispatch({
                 type: "AUTH",
-                payload: { data: credentialResponse.credential },
+                payload: {
+                  result: jwt_decode(credentialResponse.credential),
+                  token: credentialResponse.credential,
+                },
               });
               navigate("/");
             }}
