@@ -5,8 +5,9 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@mui/material";
 
+import memoriesLogo from "../../images/memoriesLogo.png";
+import memoriesText from "../../images/memoriesText.png";
 import useStyles from "./style";
-import memories from "../../images/memories.png";
 
 const Navbar = () => {
   const { classes } = useStyles();
@@ -32,22 +33,15 @@ const Navbar = () => {
 
   return (
     <AppBar className={classes.appBar} position='static' color='inherit'>
-      <div className={classes.brandContainer}>
-        <Typography
-          component={Link}
-          to='/'
-          className={classes.heading}
-          variant='h2'
-          align='center'>
-          Memories
-        </Typography>
+      <Link to='/' className={classes.brandContainer}>
+        <img src={memoriesText} alt='icon' height='45px' />
         <img
           className={classes.image}
-          src={memories}
+          src={memoriesLogo}
           alt='memories'
-          height='60'
+          height='40px'
         />
-      </div>
+      </Link>
       <Toolbar className={classes.toolbar}>
         {user ? (
           <div className={classes.profile}>

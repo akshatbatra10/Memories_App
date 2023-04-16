@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextField, Typography, Paper, Button } from "@mui/material";
 import FileBase64 from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
+import { MuiChipsInput } from "mui-chips-input";
+import { useNavigate } from "react-router-dom";
 
 import useStyles from "./style";
 import { createPost, updatePost } from "../../actions/posts";
@@ -10,13 +12,14 @@ const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({
     title: "",
     message: "",
-    tags: "",
+    tags: [],
     selectedFile: "",
   });
   const { classes } = useStyles();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
 
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -33,7 +36,7 @@ const Form = ({ currentId, setCurrentId }) => {
         updatePost(currentId, { ...postData, name: user?.result?.name })
       );
     } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+      dispatch(createPost({ ...postData, name: user?.result?.name }, navigate));
     }
     clear();
   };
@@ -44,9 +47,13 @@ const Form = ({ currentId, setCurrentId }) => {
       creator: "",
       title: "",
       message: "",
-      tags: "",
+      tags: [],
       selectedFile: "",
     });
+  };
+
+  const handleChange = (tags) => {
+    setPostData({ ...postData, tags });
   };
 
   if (!user?.result?.name) {
@@ -60,7 +67,7 @@ const Form = ({ currentId, setCurrentId }) => {
   }
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         autoComplete='off'
         noValidate
@@ -87,13 +94,13 @@ const Form = ({ currentId, setCurrentId }) => {
             setPostData({ ...postData, message: e.target.value })
           }
         />
-        <TextField
+        <MuiChipsInput
           name='tags'
-          variant='outlined'
-          label='Tags (comma separated)'
           fullWidth
           value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+          onChange={handleChange}
+          label='Tags'
+          variant='outlined'
         />
         <div className={classes.fileInput}>
           <FileBase64
