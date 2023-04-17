@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme) => ({
   },
   recommendedPosts: {
     display: "flex",
-    overflowX: "scroll",
+    overflowX: "auto",
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
     },
@@ -50,6 +50,7 @@ const useStyles = makeStyles()((theme) => ({
     height: "200px",
     overflowY: "auto",
     marginRight: "30px",
+    width: "45%",
   },
 }));
 

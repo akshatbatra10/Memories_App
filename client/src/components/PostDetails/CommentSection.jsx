@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Typography, Button, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 
@@ -8,11 +8,27 @@ import useStyles from "./style";
 const CommentSection = ({ post }) => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const commentsRef = useRef();
+  let commentsRef = useRef(null);
+  const isFirstRender = useRef(true);
   const [comments, setComments] = useState(post?.comment);
   const [comment, setComment] = useState("");
 
   const user = JSON.parse(localStorage.getItem("profile"));
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (commentsRef.current) {
+      const lastComment = commentsRef.current.lastChild;
+      lastComment.scrollIntoView({
+        behavior: "smooth",
+        inline: "end",
+        block: "end",
+      });
+    }
+  }, [comments]);
 
   const handleClick = async () => {
     const finalComment = `${user.result.name}: ${comment}`;
@@ -22,7 +38,7 @@ const CommentSection = ({ post }) => {
     setComments(newComments);
     setComment("");
 
-    commentsRef.current.scrollIntoView({ behavior: "smooth" });
+    //scroll();
   };
 
   return (
@@ -32,16 +48,17 @@ const CommentSection = ({ post }) => {
           <Typography variant='h6' gutterBottom>
             Comments
           </Typography>
-          {comments.map((c, i) => (
-            <Typography key={i} gutterBottom variant='subtitle2'>
-              <strong>{c.split(": ")[0]}</strong>
-              {c.split(":")[1]}
-            </Typography>
-          ))}
-          <div ref={commentsRef} />
+          <div ref={commentsRef}>
+            {comments.map((c, i) => (
+              <Typography key={i} gutterBottom variant='subtitle2'>
+                <strong>{c.split(": ")[0]}</strong>
+                {c.split(":")[1]}
+              </Typography>
+            ))}
+          </div>
         </div>
         {user?.result?.name && (
-          <div style={{ width: "70%" }}>
+          <div style={{ width: "55%" }}>
             <Typography variant='h6' gutterBottom>
               Write a Comment
             </Typography>
